@@ -37,11 +37,9 @@
 			</table>
 		</div>
 		<div class="cart-summary">
-			<div>
-				<p class="cart-total"><strong>Total:</strong> <span id="cart-total">$0.00</span></p>
-				<button class="cart-share-btn" id="cart-share" type="button"><i class="bi bi-share"></i> Compartir carrito</button>
-			</div>
-			<button class="primary-btn" id="checkout-btn">Finalizar compra <span>→</span></button>
+			<p class="cart-total"><strong>Total:</strong> <span id="cart-total">$0.00</span></p>
+			<button class="cart-share-btn" id="cart-share" type="button"><i class="bi bi-share"></i> Compartir carrito</button>
+			<!-- <button class="primary-btn" id="cart-share">Compartir carrito <i class="bi bi-share"></i></button> -->
 		</div>
 	</main>
 	<div id="product-modal" class="product-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
@@ -53,12 +51,20 @@
 				<button class="product-modal-arrow product-modal-arrow-next" type="button" aria-label="Foto siguiente"><i class="bi bi-chevron-right"></i></button>
 			</div>
 			<div class="product-modal-info">
+				<div style="display: flex;justify-content: flex-end;">
+					<i class="bi bi-cart-plus icon" id="product-modal-add" style="margin-right: 10px;"></i>
+					<i class="bi bi-share icon" id="product-modal-share"></i>
+				</div>
 				<span class="eyebrow">Detalle del producto</span>
 				<h2 id="product-modal-title"></h2>
 				<p id="product-modal-description"></p>
 				<strong id="product-modal-price" class="price"></strong>
-				<button id="product-modal-add" class="primary-btn" type="button"><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
-				<button id="product-modal-share" class="whatsapp-btn" type="button"><i class="bi bi-share"></i> Compartir producto</button>
+				<!-- <div style="display: flex;">
+					<i class="bi bi-cart-plus icon" id="product-modal-add" style="margin-right: 10px;"></i>
+					<i class="bi bi-share icon" id="product-modal-share"></i>
+				</div> -->
+				<!-- <button id="product-modal-add" class="primary-btn" type="button"><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
+				<button id="product-modal-share" class="whatsapp-btn" type="button"><i class="bi bi-share"></i> Compartir producto</button> -->
 			</div>
 		</div>
 	</div>

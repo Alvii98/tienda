@@ -298,8 +298,8 @@ function renderizarCarrito() {
 
         datos += `<tr>
                     <td><div class="product-cell">${imagenProducto}<div><strong>${item.nombre}</strong><small>${item.descripcion}</small></div></div></td>
-                    <td>$${item.precio.toFixed(2)}</td>
-                    <td><div class="quantity-control" aria-label="Cantidad de ${item.nombre}">
+                    <td>$${item.precio.toFixed(2)}
+                    <div class="quantity-control" aria-label="Cantidad de ${item.nombre}">
                         <button type="button" class="quantity-btn" data-cart-action="decrease" data-product-id="${item.id}" aria-label="Quitar una unidad">−</button>
                         <span>${item.cantidad}</span>
                         <button type="button" class="quantity-btn" data-cart-action="increase" data-product-id="${item.id}" aria-label="Agregar una unidad">+</button>
