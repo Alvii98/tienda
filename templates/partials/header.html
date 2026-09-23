@@ -1,0 +1,18 @@
+<div class="announcement">Envíos gratis desde $45.000 · Hecho para regalar</div>
+<header class="site-header">
+    <a class="brand" href="/tienda/inicio/" aria-label="Nido, inicio"><span class="brand-mark">n</span>nido</a>
+    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-navigation">☰</button>
+    <nav id="main-navigation" aria-label="Navegación principal">
+        <button class="menu-close" type="button" aria-label="Cerrar menú" data-menu-close>×</button>
+        <a href="/tienda/inicio/">Inicio</a>
+        <a href="#nosotros" onclick="document.querySelector('#nosotros').focus()">Nuestra historia</a>
+        <a href="/tienda/productos/">Gestor de productos</a>
+    </nav>
+    <div class="menu-backdrop" data-menu-close></div>
+    <div class="header-actions">
+        {if $PAGE == 'inicio'}
+        <button class="icon-btn" aria-label="Buscar" onclick="document.querySelector('#search').focus()"><i class="bi bi-search"></i></button>
+        <button class="icon-btn cart-btn" type="button" aria-label="Ver carrito" aria-expanded="false" aria-controls="tienda_carrito"><i class="bi bi-cart"></i><span class="cart-count" id="cart-count">0</span></button>
+        {/if}
+    </div>
+</header>
