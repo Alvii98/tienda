@@ -67,7 +67,7 @@ a { color: inherit; text-decoration: none; }
     align-items: center;
     gap: 11px;
     font-family: Fraunces, Georgia, serif;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     font-weight: 700;
 }
 .brand-mark {
@@ -209,6 +209,12 @@ h2 { font-size: clamp(2.1rem, 4vw, 3.1rem); }
 .benefit p { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.5; }
 footer { padding: 27px 5vw; color: #d9ddd7; background: var(--ink); font-size: .8rem; }
 .footer-inner { display: flex; justify-content: space-between; max-width: 1180px; margin: auto; }
+.developer-info { margin-left: auto; text-align: right; }
+.developer-heading { text-align: center; }
+.developer-info label { white-space: nowrap; }
+.developer-icon { cursor: pointer; font-size: 1.35rem; }
+.developer-icon:hover { color: var(--yellow); }
+.developer-socials { display: flex; justify-content: space-between; margin-top: 8px; }
 .toast { position: fixed; z-index: 5; right: 22px; bottom: 22px; padding: 14px 18px; color: white; background: var(--ink); box-shadow: var(--shadow); font-size: .85rem; opacity: 0; transform: translateY(14px); transition: .25s ease; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateY(0); }
 
@@ -460,6 +466,8 @@ body.product-modal-open { overflow: hidden; }
     .product-photo { height: 245px; }
     .quick-add { opacity: 1; transform: none; }
     .benefits { grid-template-columns: 1fr; }
+    .footer-inner { align-items: flex-start; gap: 24px; }
+    .developer-info { text-align: right; }
     .product-modal { padding: 14px; }
     .product-modal-content { grid-template-columns: 1fr; width: min(560px, 94vw); height: min(760px, 92vh); max-height: 92vh; height: min(760px, 92dvh); max-height: 92dvh; }
     .product-modal-image-wrap { min-height: 0; height: 52vh;height: 52dvh; }

@@ -298,7 +298,7 @@ function renderizarCarrito() {
 
         datos += `<tr>
                     <td><div class="product-cell">${imagenProducto}<div><strong>${item.nombre}</strong><small>${item.descripcion}</small></div></div></td>
-                    <td>$${item.precio.toFixed(2)}
+                    <td>$${formatearPrecio(item.precio)}
                     <div class="quantity-control" aria-label="Cantidad de ${item.nombre}">
                         <button type="button" class="quantity-btn" data-cart-action="decrease" data-product-id="${item.id}" aria-label="Quitar una unidad">−</button>
                         <span>${item.cantidad}</span>
@@ -309,7 +309,7 @@ function renderizarCarrito() {
 
     carritoBody.innerHTML = datos
     if (cartCount) cartCount.textContent = totalUnidades
-    if (cartTotal) cartTotal.textContent = `$${totalCompra.toFixed(2)}`
+    if (cartTotal) cartTotal.textContent = `$${formatearPrecio(totalCompra)}`
 }
 
 document.addEventListener('click', (event) => {
@@ -328,6 +328,80 @@ document.addEventListener('click', (event) => {
     renderizarCarrito()
     actualizarUrlCarrito()
 })
+
+function formatearPrecio(valor) {
+    const numero = Number(valor) || 0
+    return numero.toLocaleString('es-AR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    })
+}
+
+const PRODUCTOS_POR_PAGINA = 12
+let productosActuales = []
+
+function renderizarPaginacion(totalProductos, paginaActual) {
+    const paginacion = document.querySelector('#product-pagination')
+    if (!paginacion) return
+
+    const totalPaginas = Math.max(1, Math.ceil(totalProductos / PRODUCTOS_POR_PAGINA))
+    const pagina = Math.min(Math.max(1, Number(paginaActual) || 1), totalPaginas)
+
+    let html = ''
+    html += `<button type="button" class="pagination-btn" data-page="prev" ${pagina === 1 ? 'disabled' : ''} style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; cursor:pointer;">Anterior</button>`
+
+    for (let i = 1; i <= totalPaginas; i++) {
+        html += `<button type="button" class="pagination-btn" data-page="${i}" ${i === pagina ? 'style="padding:8px 12px; border-radius:999px; border:1px solid #1f2937; background:#1f2937; color:#fff; cursor:pointer;"' : 'style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; color:#1f2937; cursor:pointer;"'}>${i}</button>`
+    }
+
+    html += `<button type="button" class="pagination-btn" data-page="next" ${pagina === totalPaginas ? 'disabled' : ''} style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; cursor:pointer;">Siguiente</button>`
+
+    paginacion.innerHTML = html
+    paginacion.querySelectorAll('.pagination-btn').forEach((boton) => {
+        boton.addEventListener('click', function () {
+            const accion = this.dataset.page
+            let nuevaPagina = pagina
+
+            if (accion === 'prev') nuevaPagina = pagina - 1
+            if (accion === 'next') nuevaPagina = pagina + 1
+            if (!isNaN(Number(accion))) nuevaPagina = Number(accion)
+
+            const totalPaginasRender = Math.max(1, Math.ceil(productosActuales.length / PRODUCTOS_POR_PAGINA))
+            nuevaPagina = Math.min(Math.max(1, nuevaPagina), totalPaginasRender)
+            renderizarProductosDesdeLista(productosActuales, nuevaPagina)
+        })
+    })
+}
+
+function renderizarProductosDesdeLista(productos, paginaActual = 1) {
+    const productGrid = document.querySelector('#product-grid')
+    if (!productGrid) return
+
+    productosActuales = Array.isArray(productos) ? productos : []
+    const totalProductos = productosActuales.length
+    const totalPaginas = Math.max(1, Math.ceil(totalProductos / PRODUCTOS_POR_PAGINA))
+    const pagina = Math.min(Math.max(1, Number(paginaActual) || 1), totalPaginas)
+    const inicio = (pagina - 1) * PRODUCTOS_POR_PAGINA
+    const fin = inicio + PRODUCTOS_POR_PAGINA
+
+    const productosPagina = productosActuales.slice(inicio, fin)
+    const datos = productosPagina.map(element => {
+        const item = element
+        const tags = item.tag ? `<span class="tag">${item.tag}</span>` : ''
+        const imagen = item.imagen_ruta ? `<img src="/tienda/${item.imagen_ruta}" alt="${item.nombre}" loading="lazy" />`
+            : '<div class="no-image">Sin imagen</div>'
+
+        return `<article class="product-card" data-product-id="${item.id}" data-category="casa regalos" data-name="${item.nombre}">
+                    <div class="product-photo">${imagen}
+                    ${tags}<i class="bi bi-cart-plus quick-add icon" onclick="cargarCarrito('${item.id}')"></i></div>
+                    <div class="product-info"><div><h3>${item.nombre}</h3><p>${item.descripcion}</p></div><span class="price">$${formatearPrecio(item.valor)}</span></div>
+                </article>`
+    }).join('')
+
+    productGrid.innerHTML = datos
+    renderizarPaginacion(totalProductos, pagina)
+    abrirModalProductoDesdeUrl()
+}
 
 function datosProductos() {
     const datosPost = new FormData()
@@ -350,7 +424,7 @@ function datosProductos() {
                 datos += `<tr data-product-id="${element.id}">
                             <td><div class="product-cell">${imagenProducto}<div><strong>${element.nombre}</strong>
                             <small>${element.descripcion}</small></div></div></td>
-                            <td>$${element.valor}</td>
+                            <td>$${formatearPrecio(element.valor)}</td>
                             <td><div class="action-icons">
                             <i class="bi bi-pencil-square icon" title="Editar" onclick="editarProducto('${element.id}')"></i>
                             <i class="bi bi-trash icon" title="Eliminar" onclick="eliminarProducto('${element.id}')"></i></div></td>
@@ -373,16 +447,7 @@ function datosProductos() {
             document.querySelector('#product-count').textContent = json.resp.length + ' productos'
             abrirModalProductoDesdeUrl()
         }else {
-            json.resp.forEach(element => {
-                const tags = element.tag ? `<span class="tag">${element.tag}</span>` : ''
-                datos += `<article class="product-card" data-product-id="${element.id}" data-category="casa regalos" data-name="${element.nombre}">
-                            <div class="product-photo"><img src="/tienda/${element.imagen_ruta}" alt="${element.nombre}" loading="lazy" />
-                            ${tags}<i class="bi bi-cart-plus quick-add icon" onclick="cargarCarrito('${element.id}')"></i></div>
-                            <div class="product-info"><div><h3>${element.nombre}</h3><p>${element.descripcion}</p></div><span class="price">$${element.valor}</span></div>
-                        </article>`
-            })
-            document.querySelector('#product-grid').innerHTML = datos
-            abrirModalProductoDesdeUrl()
+            renderizarProductosDesdeLista(json.resp, 1)
         }
     }).catch(error => {
         alertify.error('Ocurrio un error inesperado, vuelva a intentar por favor.')
@@ -409,20 +474,8 @@ function buscarProductos(categoria = '') {
     })
     .then(response => response.json())
     .then(function (json) {
-        let datos = ''
         if (json.error != '') return alertify.error(json.error)
-
-        json.resp.forEach(element => {
-            const tags = element.tag ? `<span class="tag">${element.tag}</span>` : '',
-            imagen = element.imagen_ruta ? `<img src="/tienda/${element.imagen_ruta}" alt="${element.nombre}" loading="lazy" />`
-            : '<div class="no-image">Sin imagen</div>'
-            datos += `<article class="product-card" data-product-id="${element.id}" data-category="casa regalos" data-name="${element.nombre}">
-                        <div class="product-photo">${imagen}
-                        ${tags}<i class="bi bi-cart-plus quick-add icon" onclick="cargarCarrito('${element.id}')"></i></div>
-                        <div class="product-info"><div><h3>${element.nombre}</h3><p>${element.descripcion}</p></div><span class="price">$${element.valor}</span></div>
-                    </article>`
-        })
-        document.querySelector('#product-grid').innerHTML = datos
+        renderizarProductosDesdeLista(json.resp, 1)
     }).catch(error => {
         alertify.error('Ocurrio un error inesperado, vuelva a intentar por favor.')
         console.error('Error:', error);

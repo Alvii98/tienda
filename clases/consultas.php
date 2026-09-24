@@ -193,8 +193,49 @@ class datos{
         try {
             $conn = SingletonConexion::getInstance()->getConnection();
 
-            $query = $esCategoria ? "DELETE FROM categoria WHERE id = ?"  : "DELETE FROM productos WHERE id = ?";
-            $query = $esImagen == 'img' ? "DELETE FROM imagenes WHERE id = ?"  : $query;
+            $carpetaProductos = __DIR__ . '/../img/productos';
+            $carpetaProducto = null;
+
+            if ($esImagen) {
+                $consultaImagen = mysqli_prepare($conn, "SELECT id_producto, nombre FROM imagenes WHERE id = ?");
+                if (!$consultaImagen) return false;
+
+                mysqli_stmt_bind_param($consultaImagen, 'i', $id_producto);
+                if (!mysqli_stmt_execute($consultaImagen)) return false;
+
+                $imagen = mysqli_stmt_get_result($consultaImagen)->fetch_assoc();
+                if (!$imagen) return false;
+
+                $carpetaProducto = $carpetaProductos . DIRECTORY_SEPARATOR . (int) $imagen['id_producto'];
+                if (!empty($imagen['nombre'])) {
+                    $rutaArchivo = $carpetaProducto . DIRECTORY_SEPARATOR . basename($imagen['nombre']);
+                    if (is_file($rutaArchivo)) {
+                        unlink($rutaArchivo);
+                    }
+                }
+                $query = "DELETE FROM imagenes WHERE id = ?";
+            } elseif ($esCategoria) {
+                $query = "DELETE FROM categoria WHERE id = ?";
+            } else {
+                $carpetaProducto = $carpetaProductos . DIRECTORY_SEPARATOR . (int) $id_producto;
+                if (is_dir($carpetaProducto)) {
+                    $archivos = scandir($carpetaProducto);
+                    if ($archivos !== false) {
+                        foreach ($archivos as $archivo) {
+                            if ($archivo === '.' || $archivo === '..') continue;
+                            $rutaArchivo = $carpetaProducto . DIRECTORY_SEPARATOR . $archivo;
+                            if (is_file($rutaArchivo)) unlink($rutaArchivo);
+                        }
+                        rmdir($carpetaProducto);
+                    }
+                }
+                $stmt = mysqli_prepare($conn, "DELETE FROM imagenes WHERE id_producto = ?");
+                if (!$stmt) return false;
+
+                mysqli_stmt_bind_param($stmt, 'i', $id_producto);
+                if (!mysqli_stmt_execute($stmt)) return false;
+                $query = "DELETE FROM productos WHERE id = ?";
+            }
 
             $stmt = mysqli_prepare($conn, $query);
 
@@ -204,7 +245,9 @@ class datos{
 
             if (!mysqli_stmt_execute($stmt)) return false;
 
-            return mysqli_affected_rows($conn);
+            $filasAfectadas = mysqli_affected_rows($conn);
+
+            return $filasAfectadas;
         } catch (\Throwable $th) {
             echo $th->getMessage();
             return false;
