@@ -351,7 +351,7 @@ function renderizarPaginacion(totalProductos, paginaActual) {
     html += `<button type="button" class="pagination-btn" data-page="prev" ${pagina === 1 ? 'disabled' : ''} style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; cursor:pointer;">Anterior</button>`
 
     for (let i = 1; i <= totalPaginas; i++) {
-        html += `<button type="button" class="pagination-btn" data-page="${i}" ${i === pagina ? 'style="padding:8px 12px; border-radius:999px; border:1px solid #1f2937; background:#1f2937; color:#fff; cursor:pointer;"' : 'style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; color:#1f2937; cursor:pointer;"'}>${i}</button>`
+        html += `<button type="button" class="pagination-btn" data-page="${i}" ${i === pagina ? 'style="padding:8px 12px; border-radius:999px; border:1px solid #1f2937; background:#1f2937; color:#fff; cursor:pointer; width: 36px;"' : 'style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; color:#1f2937; cursor:pointer; width: 36px;"'}>${i}</button>`
     }
 
     html += `<button type="button" class="pagination-btn" data-page="next" ${pagina === totalPaginas ? 'disabled' : ''} style="padding:8px 12px; border-radius:999px; border:1px solid #ddd; background:#fff; cursor:pointer;">Siguiente</button>`
