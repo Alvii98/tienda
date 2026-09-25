@@ -714,7 +714,7 @@ function compartirCarrito() {
 
     actualizarUrlCarrito()
     const enlace = window.location.href
-    const datos = { title: 'Mi carrito de Nido', text: 'Mirá los productos que elegí:', url: enlace }
+    const datos = { title: 'Mi carrito', text: 'Mirá los productos que elegí:', url: enlace }
 
     if (navigator.share) {
         navigator.share(datos).catch(() => {})
