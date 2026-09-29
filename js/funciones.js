@@ -525,7 +525,7 @@ function editarProducto(id = '') {
                             </div>`
         })
         document.querySelector('#imagenes_cargadas').innerHTML = imagenes
-        document.querySelector('#boton_carga_prod').focus()
+        document.querySelector('#nombre').focus()
     }).catch(error => {
         alertify.error('Ocurrio un error inesperado, vuelva a intentar por favor.')
         console.error('Error:', error);
@@ -547,6 +547,8 @@ function cargarProductos(id = '') {
     }
 
     const datosPost = new FormData()
+    let titulo = id != '' ? 'Editar producto' : 'Nuevo producto',
+    descripcionAlerta = id != '' ? '¿Seguro quiere editar este producto?' : '¿Seguro quiere cargar este producto?'
     if (id != '') {
         datosPost.append('editarProductos', true)
         datosPost.append('id', id)
@@ -561,7 +563,7 @@ function cargarProductos(id = '') {
     Array.from(imagenInput.files).forEach((imagen) => {
         datosPost.append('imagenes[]', imagen)
     })
-    alertify.confirm('Nuevo producto', '\u00BFSeguro quiere cargar este producto?', function(){
+    alertify.confirm(titulo, descripcionAlerta, function(){
         fetch('/tienda/ajax/cargar_productos.php', {
             method: "POST",
             body: datosPost

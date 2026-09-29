@@ -188,7 +188,7 @@ h2 { font-size: clamp(2.1rem, 4vw, 3.1rem); }
 .search input { width: 100%; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: .86rem; }
 .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
 .product-card { min-width: 0; position: relative; }
-.product-photo { position: relative; height: 285px; overflow: hidden; background: #eee; }
+.product-photo { position: relative; height: 285px; overflow: hidden; background: #eee; border-radius: 8px;}
 .product-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .45s ease; }
 .product-photo img { cursor: zoom-in; }
 .no-image { display: grid; width: 100%; height: 100%; place-items: center; color: var(--muted); background: var(--sage); font-size: .8rem; font-weight: 700; }
